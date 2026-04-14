@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Patient Schedule - RehabConnect{% endblock %}
+{% block content %}
+
+<h2 style="color: var(--navy); margin-bottom: 1.5rem; text-align: center;">Today's Schedule</h2>
+
+<p style="text-align: center; margin-bottom: 2rem; font-size: 1.1rem;">
+    <strong style="color: var(--teal);">Patient ID:</strong> {{ schedule.patient_id }}
+</p>
+
+<div style="display: grid; gap: 1rem;">
+    <div class="schedule-item">
+        <strong>🏥 Physical Therapy:</strong>
+        <span>{{ schedule['pt_time'] or 'Not scheduled' }}</span>
+    </div>
+
+    <div class="schedule-item">
+        <strong>👐 Occupational Therapy:</strong>
+        <span>{{ schedule['ot_time'] or 'Not scheduled' }}</span>
+    </div>
+
+    <div class="schedule-item">
+        <strong>🗣️ Speech Therapy:</strong>
+        <span>{{ schedule['st_time'] or 'Not scheduled' }}</span>
+    </div>
+</div>
+
+<div style="text-align: center; margin-top: 2rem;">
+    <a class="btn" href="/update/{{ schedule.patient_id }}">Update Schedule</a>
+</div>
+
+{% endblock %}

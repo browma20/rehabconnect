@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Update Schedule - RehabConnect{% endblock %}
+{% block content %}
+
+<h2 style="color: var(--navy); margin-bottom: 1.5rem; text-align: center;">Update Patient Schedule</h2>
+
+{% if error %}
+<div class="alert alert-error">
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="post">
+    <div class="form-group">
+        <label class="form-label" for="pt_time">🏥 Physical Therapy Time</label>
+        <input class="form-input" id="pt_time" name="pt_time" type="text" value="{{ schedule.pt_time }}" required placeholder="e.g., 9:00 AM - 10:00 AM" />
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="ot_time">👐 Occupational Therapy Time</label>
+        <input class="form-input" id="ot_time" name="ot_time" type="text" value="{{ schedule.ot_time }}" required placeholder="e.g., 10:30 AM - 11:30 AM" />
+    </div>
+
+    <div class="form-group">
+        <label class="form-label" for="st_time">🗣️ Speech Therapy Time</label>
+        <input class="form-input" id="st_time" name="st_time" type="text" value="{{ schedule.st_time }}" required placeholder="e.g., 2:00 PM - 3:00 PM" />
+    </div>
+
+    <div style="text-align: center; margin-top: 2rem;">
+        <button class="btn btn-secondary" type="submit">Save Schedule</button>
+    </div>
+</form>
+
+<div style="text-align: center; margin-top: 1.5rem;">
+    <a class="btn" href="{{ url_for('patient', patient_id=schedule.patient_id) }}" style="background: transparent; color: var(--navy); border: 2px solid var(--navy);">
+        ← Back to Schedule
+    </a>
+</div>
+
+{% endblock %} 
