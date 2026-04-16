@@ -1,8 +1,8 @@
 from datetime import datetime
 from sqlalchemy.orm import Session as OrmSession
-from backend.app.models.notification import Notification
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.therapist import Therapist
+from app.models.notification import Notification
+from app.models.session import Session as SessionModel
+from app.models.therapist import Therapist
 
 
 class NotificationService:

@@ -1,7 +1,7 @@
 from faker import Faker
 from datetime import datetime, timedelta
-from backend.app.database import SessionLocal
-from backend.app.services.patient_service import PatientService
+from app.database import SessionLocal
+from app.services.patient_service import PatientService
 
 fake = Faker()
 

@@ -1,6 +1,6 @@
-from backend.app.models.automation_audit_entry import AutomationAuditEntry
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.therapist_availability import TherapistAvailability
+from app.models.automation_audit_entry import AutomationAuditEntry
+from app.models.session import Session as SessionModel
+from app.models.therapist_availability import TherapistAvailability
 
 
 def test_suggest_assignment_never_modifies_session_assignment_fields(

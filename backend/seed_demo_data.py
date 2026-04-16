@@ -2,13 +2,13 @@ from datetime import datetime, timedelta, time, timezone
 
 from sqlalchemy import inspect, text
 
-from backend.app.database import SessionLocal
-from backend.app.models.patient import Patient
-from backend.app.models.user import User
-from backend.app.models.therapy_session import TherapySession
-from backend.app.models.functional_score import FunctionalScore
-from backend.app.models.idt_meeting import IDTMeeting
-from backend.app.models.medical_necessity_record import MedicalNecessityRecord
+from app.database import SessionLocal
+from app.models.patient import Patient
+from app.models.user import User
+from app.models.therapy_session import TherapySession
+from app.models.functional_score import FunctionalScore
+from app.models.idt_meeting import IDTMeeting
+from app.models.medical_necessity_record import MedicalNecessityRecord
 
 
 SEED_SOURCE = "demo_seed_v1"

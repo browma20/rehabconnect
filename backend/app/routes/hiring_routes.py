@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 
-from backend.app.database import SessionLocal
-from backend.app.services.hiring_recommendation_service import HiringRecommendationService
+from app.database import SessionLocal
+from app.services.hiring_recommendation_service import HiringRecommendationService
 
 hiring_bp = Blueprint("hiring", __name__)
 

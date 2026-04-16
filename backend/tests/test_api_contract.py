@@ -1,8 +1,8 @@
 from flask import Flask
 
-from backend.app.routes import automation_routes
-from backend.app.routes.automation_routes import automation_bp
-from backend.app.services.automation_suggestion_service import AutomationSuggestionService
+from app.routes import automation_routes
+from app.routes.automation_routes import automation_bp
+from app.services.automation_suggestion_service import AutomationSuggestionService
 
 
 class DummyDb:

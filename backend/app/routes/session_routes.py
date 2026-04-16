@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
 from datetime import date, timedelta
-from backend.app.database import SessionLocal
-from backend.app.services.session_service import SessionService
-from backend.app.services.matching_service import MatchingService
-from backend.app.services.conflict_detection_service import ConflictDetectionService
-from backend.app.services.session_audit_service import SessionAuditService
+from app.database import SessionLocal
+from app.services.session_service import SessionService
+from app.services.matching_service import MatchingService
+from app.services.conflict_detection_service import ConflictDetectionService
+from app.services.session_audit_service import SessionAuditService
 
 
 session_bp = Blueprint('session', __name__)

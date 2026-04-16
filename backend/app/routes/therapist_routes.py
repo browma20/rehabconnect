@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
-from backend.app.services.therapist_service import TherapistService
-from backend.app.services.bulk_rescheduling_service import BulkReschedulingService
-from backend.app.database import SessionLocal
-from backend.app.models.therapist import Therapist
+from app.services.therapist_service import TherapistService
+from app.services.bulk_rescheduling_service import BulkReschedulingService
+from app.database import SessionLocal
+from app.models.therapist import Therapist
 from datetime import date
 
 therapist_bp = Blueprint('therapist', __name__)

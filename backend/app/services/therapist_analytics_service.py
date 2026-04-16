@@ -1,9 +1,9 @@
 from datetime import date, datetime, timedelta
 from sqlalchemy.orm import Session as OrmSession
 
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.session_audit_log import SessionAuditLog
-from backend.app.models.therapist import Therapist as TherapistModel
+from app.models.session import Session as SessionModel
+from app.models.session_audit_log import SessionAuditLog
+from app.models.therapist import Therapist as TherapistModel
 
 
 class TherapistAnalyticsService:

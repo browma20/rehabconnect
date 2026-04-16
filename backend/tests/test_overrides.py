@@ -1,6 +1,6 @@
-from backend.app.models.automation_audit_entry import AutomationAuditEntry
-from backend.app.models.override_log import OverrideLog
-from backend.app.models.session import Session as SessionModel
+from app.models.automation_audit_entry import AutomationAuditEntry
+from app.models.override_log import OverrideLog
+from app.models.session import Session as SessionModel
 
 
 def test_log_override_creates_override_and_automation_audit_entries(

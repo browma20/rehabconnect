@@ -2,11 +2,11 @@ from datetime import date, datetime, time, timedelta
 
 from sqlalchemy.orm import Session as OrmSession
 
-from backend.app.models.predictive_alert import PredictiveAlert
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.therapist import Therapist as TherapistModel
-from backend.app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
-from backend.app.services.notification_service import NotificationService
+from app.models.predictive_alert import PredictiveAlert
+from app.models.session import Session as SessionModel
+from app.models.therapist import Therapist as TherapistModel
+from app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
+from app.services.notification_service import NotificationService
 
 
 SHORTAGE_THRESHOLD_MINUTES = 60

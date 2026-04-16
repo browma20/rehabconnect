@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
-from backend.app.database import SessionLocal
-from backend.app.services.automation_suggestion_service import AutomationSuggestionService
+from app.database import SessionLocal
+from app.services.automation_suggestion_service import AutomationSuggestionService
 
 automation_bp = Blueprint("automation", __name__)
 

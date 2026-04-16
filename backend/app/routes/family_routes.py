@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from datetime import date
-from backend.app.database import SessionLocal
-from backend.app.services.family_schedule_service import FamilyScheduleService
+from app.database import SessionLocal
+from app.services.family_schedule_service import FamilyScheduleService
 
 
 family_bp = Blueprint('family', __name__)

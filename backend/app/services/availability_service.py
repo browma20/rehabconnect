@@ -1,7 +1,7 @@
 import uuid
 from datetime import time, datetime
 from sqlalchemy.orm import Session as OrmSession
-from backend.app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
+from app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
 
 
 class AvailabilityService:

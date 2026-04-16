@@ -1,6 +1,6 @@
 from datetime import datetime, time, timedelta
 
-from backend.app.models.therapist_availability import TherapistTimeOff
+from app.models.therapist_availability import TherapistTimeOff
 
 
 def test_detect_risks_flags_near_capacity(automation_service, sample_scheduling_session, sample_therapist):

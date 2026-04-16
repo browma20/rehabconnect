@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from backend.app.database import SessionLocal
-from backend.app.services.notification_service import NotificationService
+from app.database import SessionLocal
+from app.services.notification_service import NotificationService
 
 
 notification_bp = Blueprint('notification', __name__)

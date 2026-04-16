@@ -1,13 +1,13 @@
 import pytest
 from datetime import date, timedelta
-from backend.app.compliance_engines.three_hour_rule_engine import (
+from app.compliance_engines.three_hour_rule_engine import (
     daily_3hour_rule,
     seven_day_rolling_intensity,
     missed_minutes_compliance
 )
-from backend.app.compliance_engines.first_day_engine import check_first_day_compliance
-from backend.app.compliance_engines.idt_engine import check_idt_compliance
-from backend.app.compliance_engines.functional_improvement_engine import check_functional_improvement
+from app.compliance_engines.first_day_engine import check_first_day_compliance
+from app.compliance_engines.idt_engine import check_idt_compliance
+from app.compliance_engines.functional_improvement_engine import check_functional_improvement
 
 
 class TestThreeHourRuleEngine:

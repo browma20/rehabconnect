@@ -2,8 +2,8 @@ from datetime import date
 
 from flask import Blueprint, jsonify, request
 
-from backend.app.database import SessionLocal
-from backend.app.services.predictive_alert_service import PredictiveAlertService
+from app.database import SessionLocal
+from app.services.predictive_alert_service import PredictiveAlertService
 
 
 predictive_alert_bp = Blueprint("predictive_alert", __name__)

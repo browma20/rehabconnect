@@ -1,8 +1,8 @@
 import pytest
 from datetime import datetime, date
-from backend.app.models.patient import Patient
-from backend.app.models.therapy_session import TherapySession
-from backend.app.models.physician_evaluation import PhysicianEvaluation
+from app.models.patient import Patient
+from app.models.therapy_session import TherapySession
+from app.models.physician_evaluation import PhysicianEvaluation
 
 
 class TestPatient:

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from datetime import date
-from backend.app.database import SessionLocal
-from backend.app.services.therapist_mobile_service import TherapistMobileService
+from app.database import SessionLocal
+from app.services.therapist_mobile_service import TherapistMobileService
 
 
 therapist_mobile_bp = Blueprint('therapist_mobile', __name__)

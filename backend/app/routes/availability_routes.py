@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from backend.app.database import SessionLocal
-from backend.app.services.availability_service import AvailabilityService
+from app.database import SessionLocal
+from app.services.availability_service import AvailabilityService
 
 availability_bp = Blueprint('availability', __name__)
 

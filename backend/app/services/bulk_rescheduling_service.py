@@ -1,13 +1,13 @@
 from datetime import datetime
 from sqlalchemy.orm import Session as OrmSession
 
-from backend.app.models.session import Session as SessionModel
-from backend.app.services.conflict_detection_service import ConflictDetectionService
-from backend.app.services.matching_service import MatchingService
-from backend.app.services.notification_service import NotificationService
-from backend.app.services.session_audit_service import SessionAuditService
-from backend.app.services.session_service import SessionService
-from backend.app.services.therapist_service import TherapistService
+from app.models.session import Session as SessionModel
+from app.services.conflict_detection_service import ConflictDetectionService
+from app.services.matching_service import MatchingService
+from app.services.notification_service import NotificationService
+from app.services.session_audit_service import SessionAuditService
+from app.services.session_service import SessionService
+from app.services.therapist_service import TherapistService
 
 
 class BulkReschedulingService:

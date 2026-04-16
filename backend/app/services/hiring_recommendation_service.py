@@ -23,11 +23,11 @@ from datetime import date, datetime, timedelta
 from sqlalchemy.orm import Session as OrmSession
 from sqlalchemy import and_
 
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.therapist import Therapist as TherapistModel
-from backend.app.services.capacity_planning_service import CapacityPlanningService
-from backend.app.services.therapist_performance_service import TherapistPerformanceService
-from backend.app.services.predictive_alert_service import PredictiveAlertService
+from app.models.session import Session as SessionModel
+from app.models.therapist import Therapist as TherapistModel
+from app.services.capacity_planning_service import CapacityPlanningService
+from app.services.therapist_performance_service import TherapistPerformanceService
+from app.services.predictive_alert_service import PredictiveAlertService
 
 # ---------------------------------------------------------------------------
 # Tunable constants

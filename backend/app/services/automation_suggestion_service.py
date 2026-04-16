@@ -3,17 +3,17 @@ from types import SimpleNamespace
 
 from sqlalchemy.orm import Session as OrmSession
 
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.session_audit_log import SessionAuditLog
-from backend.app.models.therapist import Therapist as TherapistModel
-from backend.app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
-from backend.app.models.predictive_alert import PredictiveAlert
-from backend.app.models.automation_audit_entry import AutomationAuditEntry
-from backend.app.models.override_log import OverrideLog
-from backend.app.services.conflict_detection_service import ConflictDetectionService
-from backend.app.services.matching_service import MatchingService
-from backend.app.services.session_audit_service import SessionAuditService
-from backend.app.services.therapist_performance_service import TherapistPerformanceService
+from app.models.session import Session as SessionModel
+from app.models.session_audit_log import SessionAuditLog
+from app.models.therapist import Therapist as TherapistModel
+from app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
+from app.models.predictive_alert import PredictiveAlert
+from app.models.automation_audit_entry import AutomationAuditEntry
+from app.models.override_log import OverrideLog
+from app.services.conflict_detection_service import ConflictDetectionService
+from app.services.matching_service import MatchingService
+from app.services.session_audit_service import SessionAuditService
+from app.services.therapist_performance_service import TherapistPerformanceService
 
 # Tunable scoring weights (sum = 1.0)
 ASSIGNMENT_WEIGHTS = {

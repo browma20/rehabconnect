@@ -2,24 +2,24 @@ import pytest
 from datetime import datetime, date, time, timedelta
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from backend.app.models import Base
-from backend.app.models.automation_audit_entry import AutomationAuditEntry
-from backend.app.models.override_log import OverrideLog
-from backend.app.models.patient import Patient
-from backend.app.models.predictive_alert import PredictiveAlert
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.session_audit_log import SessionAuditLog
-from backend.app.models.therapist import Therapist as TherapistModel
-from backend.app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
-from backend.app.models.therapy_session import TherapySession
-from backend.app.models.physician_evaluation import PhysicianEvaluation
-from backend.app.models.functional_score import FunctionalScore
-from backend.app.models.idt_meeting import IDTMeeting
-from backend.app.models.medical_necessity_record import MedicalNecessityRecord
-from backend.app.models.risk_score import RiskScore
-from backend.app.models.audit_log import AuditLog
-from backend.app.models.user import User
-from backend.app.services.automation_suggestion_service import AutomationSuggestionService
+from app.models import Base
+from app.models.automation_audit_entry import AutomationAuditEntry
+from app.models.override_log import OverrideLog
+from app.models.patient import Patient
+from app.models.predictive_alert import PredictiveAlert
+from app.models.session import Session as SessionModel
+from app.models.session_audit_log import SessionAuditLog
+from app.models.therapist import Therapist as TherapistModel
+from app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
+from app.models.therapy_session import TherapySession
+from app.models.physician_evaluation import PhysicianEvaluation
+from app.models.functional_score import FunctionalScore
+from app.models.idt_meeting import IDTMeeting
+from app.models.medical_necessity_record import MedicalNecessityRecord
+from app.models.risk_score import RiskScore
+from app.models.audit_log import AuditLog
+from app.models.user import User
+from app.services.automation_suggestion_service import AutomationSuggestionService
 
 
 @pytest.fixture(scope="session")

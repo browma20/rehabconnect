@@ -18,10 +18,10 @@ from datetime import date, datetime, timedelta
 from sqlalchemy import func
 from sqlalchemy.orm import Session as OrmSession
 
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.session_audit_log import SessionAuditLog
-from backend.app.models.therapist import Therapist as TherapistModel
-from backend.app.services.therapist_analytics_service import TherapistAnalyticsService
+from app.models.session import Session as SessionModel
+from app.models.session_audit_log import SessionAuditLog
+from app.models.therapist import Therapist as TherapistModel
+from app.services.therapist_analytics_service import TherapistAnalyticsService
 
 # ---------------------------------------------------------------------------
 # Tunable constants

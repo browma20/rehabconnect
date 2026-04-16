@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 
-from backend.app.database import SessionLocal
-from backend.app.services.marketplace_service import MarketplaceService, AUTO_ASSIGN_THRESHOLD
+from app.database import SessionLocal
+from app.services.marketplace_service import MarketplaceService, AUTO_ASSIGN_THRESHOLD
 
 marketplace_bp = Blueprint("marketplace", __name__)
 

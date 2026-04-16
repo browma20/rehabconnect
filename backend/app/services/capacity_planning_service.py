@@ -2,11 +2,11 @@ from datetime import date, datetime, time, timedelta
 
 from sqlalchemy.orm import Session as OrmSession
 
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.session_audit_log import SessionAuditLog
-from backend.app.models.therapist import Therapist as TherapistModel
-from backend.app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
-from backend.app.services.therapist_analytics_service import TherapistAnalyticsService
+from app.models.session import Session as SessionModel
+from app.models.session_audit_log import SessionAuditLog
+from app.models.therapist import Therapist as TherapistModel
+from app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
+from app.services.therapist_analytics_service import TherapistAnalyticsService
 
 LOOKBACK_WEEKS = 8
 DEFAULT_DISCIPLINES = ["OT", "PT", "ST"]

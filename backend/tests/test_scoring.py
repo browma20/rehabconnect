@@ -1,6 +1,6 @@
 from datetime import date, time
 
-from backend.app.models.therapist_availability import TherapistAvailability
+from app.models.therapist_availability import TherapistAvailability
 
 
 def test_availability_score_is_ideal_for_half_block_fit(db_session, automation_service, sample_scheduling_session, sample_therapist):

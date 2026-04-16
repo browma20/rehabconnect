@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy.orm import Session as OrmSession
-from backend.app.models.session_audit_log import SessionAuditLog
+from app.models.session_audit_log import SessionAuditLog
 
 
 class SessionAuditService:

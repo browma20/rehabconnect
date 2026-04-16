@@ -21,14 +21,14 @@ from datetime import date, datetime, time, timedelta
 
 from sqlalchemy.orm import Session as OrmSession
 
-from backend.app.models.patient import Patient as PatientModel
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.therapist import Therapist as TherapistModel
-from backend.app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
-from backend.app.services.conflict_detection_service import ConflictDetectionService
-from backend.app.services.notification_service import NotificationService
-from backend.app.services.session_audit_service import SessionAuditService
-from backend.app.services.therapist_analytics_service import TherapistAnalyticsService
+from app.models.patient import Patient as PatientModel
+from app.models.session import Session as SessionModel
+from app.models.therapist import Therapist as TherapistModel
+from app.models.therapist_availability import TherapistAvailability, TherapistTimeOff
+from app.services.conflict_detection_service import ConflictDetectionService
+from app.services.notification_service import NotificationService
+from app.services.session_audit_service import SessionAuditService
+from app.services.therapist_analytics_service import TherapistAnalyticsService
 
 # -----------------------------------------------------------------------
 # Tunable constants – change these to re-tune without touching logic

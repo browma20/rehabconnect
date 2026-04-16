@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from backend.app.models.therapist import Therapist
+from app.models.therapist import Therapist
 
 class TherapistService:
     def __init__(self, db: Session):

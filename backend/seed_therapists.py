@@ -1,6 +1,6 @@
 from faker import Faker
-from backend.app.database import SessionLocal
-from backend.app.services.therapist_service import TherapistService
+from app.database import SessionLocal
+from app.services.therapist_service import TherapistService
 
 fake = Faker()
 

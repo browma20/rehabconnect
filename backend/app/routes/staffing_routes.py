@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from datetime import date
-from backend.app.database import SessionLocal
-from backend.app.services.staffing_prediction_service import StaffingPredictionService
-from backend.app.services.load_balancing_service import LoadBalancingService
+from app.database import SessionLocal
+from app.services.staffing_prediction_service import StaffingPredictionService
+from app.services.load_balancing_service import LoadBalancingService
 
 staffing_bp = Blueprint('staffing', __name__)
 

@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
-from backend.app.database import SessionLocal
-from backend.app.services.capacity_planning_service import CapacityPlanningService
+from app.database import SessionLocal
+from app.services.capacity_planning_service import CapacityPlanningService
 
 
 capacity_planning_bp = Blueprint("capacity_planning", __name__)

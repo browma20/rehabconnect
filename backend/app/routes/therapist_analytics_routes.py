@@ -2,8 +2,8 @@ from datetime import date, timedelta
 
 from flask import Blueprint, jsonify, request
 
-from backend.app.database import SessionLocal
-from backend.app.services.therapist_analytics_service import TherapistAnalyticsService
+from app.database import SessionLocal
+from app.services.therapist_analytics_service import TherapistAnalyticsService
 
 
 therapist_analytics_bp = Blueprint("therapist_analytics", __name__)

@@ -1,11 +1,11 @@
 from datetime import date, datetime, timedelta
 from sqlalchemy.orm import Session as OrmSession
-from backend.app.models.session import Session as SessionModel
-from backend.app.models.therapist import Therapist
-from backend.app.services.matching_service import MatchingService
-from backend.app.services.conflict_detection_service import ConflictDetectionService
-from backend.app.services.session_audit_service import SessionAuditService
-from backend.app.services.notification_service import NotificationService
+from app.models.session import Session as SessionModel
+from app.models.therapist import Therapist
+from app.services.matching_service import MatchingService
+from app.services.conflict_detection_service import ConflictDetectionService
+from app.services.session_audit_service import SessionAuditService
+from app.services.notification_service import NotificationService
 
 
 class LoadBalancingService:

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 
-from backend.app.database import SessionLocal
-from backend.app.services.therapist_performance_service import TherapistPerformanceService
+from app.database import SessionLocal
+from app.services.therapist_performance_service import TherapistPerformanceService
 
 therapist_performance_bp = Blueprint("therapist_performance", __name__)
 

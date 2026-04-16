@@ -1,6 +1,6 @@
 import pytest
-from backend.app.risk_engine.risk_scoring import calculate_patient_risk
-from backend.app.risk_engine.risk_utils import (
+from app.risk_engine.risk_scoring import calculate_patient_risk
+from app.risk_engine.risk_utils import (
     status_to_score,
     calculate_documentation_completeness,
     calculate_survey_readiness,

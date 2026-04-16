@@ -4,10 +4,10 @@ from datetime import date, timedelta, time, datetime
 
 from faker import Faker
 
-from backend.app.database import SessionLocal
-from backend.app.services.patient_service import PatientService
-from backend.app.services.session_service import SessionService
-from backend.app.services.therapist_service import TherapistService
+from app.database import SessionLocal
+from app.services.patient_service import PatientService
+from app.services.session_service import SessionService
+from app.services.therapist_service import TherapistService
 
 
 fake = Faker()

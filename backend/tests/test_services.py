@@ -1,8 +1,8 @@
 import pytest
 from datetime import datetime, date
-from backend.app.services.patient_service import PatientService
-from backend.app.services.therapy_minutes_service import TherapyMinutesService
-from backend.app.services.physician_evaluation_service import PhysicianEvaluationService
+from app.services.patient_service import PatientService
+from app.services.therapy_minutes_service import TherapyMinutesService
+from app.services.physician_evaluation_service import PhysicianEvaluationService
 
 
 class TestPatientService:

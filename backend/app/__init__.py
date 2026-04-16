@@ -1,5 +1,8 @@
+import os
+
 from flask import Flask
 from flask_cors import CORS
+
 from .database import engine
 from .models import Base
 from .models.audit_log import AuditLog
@@ -63,8 +66,9 @@ def create_app():
     from .models.therapist_availability import TherapistAvailability, TherapistTimeOff
     from .models.user import User
 
-    # Create database tables
-    Base.metadata.create_all(bind=engine)
+    # Keep schema creation opt-in to avoid boot failures when DB is unavailable.
+    if os.getenv("AUTO_CREATE_TABLES", "false").lower() == "true":
+        Base.metadata.create_all(bind=engine)
 
     # Register blueprints
     app.register_blueprint(patient_bp, url_prefix='/api')
