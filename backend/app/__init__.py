@@ -100,4 +100,15 @@ def create_app():
     app.register_blueprint(availability_bp)
     app.register_blueprint(staffing_bp)
 
+@app.route("/debug/flask")
+def debug_flask():
+    try:
+        from sqlalchemy import text
+        from .database import engine
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT 1"))
+            return {"connected": True, "result": [row for row in result]}
+    except Exception as e:
+        return {"connected": False, "error": str(e)}
+
     return app
