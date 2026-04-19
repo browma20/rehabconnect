@@ -1,3 +1,554 @@
+"""
+Comprehensive demo data seeding system for RehabConnect.
+Populates all major models with realistic synthetic demo data.
+Idempotent -- safe to run multiple times.
+"""
+
+import os
+import sys
+import uuid
+from datetime import datetime, timedelta, time
+from random import randint, choice, random
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from app.database import SessionLocal
+from app.models import (
+    Patient, Therapist, Session, TherapySession, TherapistAvailability,
+    TherapistTimeOff, RiskScore, FunctionalScore, Notification, PredictiveAlert,
+    IDTMeeting, MedicalNecessityRecord, OverrideLog, SessionAuditLog
+)
+
+# Try to import faker for realistic names; fall back to manual generation if not available
+try:
+    from faker import Faker
+    faker = Faker()
+    USE_FAKER = True
+except ImportError:
+    USE_FAKER = False
+
+# Sample data for manual generation if Faker is not available
+FIRST_NAMES = [
+    "James", "Mary", "Robert", "Patricia", "Michael", "Jennifer",
+    "William", "Linda", "David", "Barbara", "Richard", "Susan",
+    "Joseph", "Jessica", "Thomas", "Sarah", "Charles", "Karen"
+]
+
+LAST_NAMES = [
+    "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia",
+    "Miller", "Davis", "Rodriguez", "Martinez", "Hernandez", "Lopez",
+    "Gonzalez", "Wilson", "Anderson", "Thomas", "Taylor", "Moore"
+]
+
+DIAGNOSES = [
+    "Stroke (CVA)", "Hip Fracture", "Knee Surgery Recovery", "Pneumonia",
+    "Cardiac Event", "COPD", "Diabetes (Type 2)", "CHF",
+    "Parkinson's Disease", "Multiple Sclerosis", "Total Knee Replacement",
+    "Total Hip Replacement", "ACL Tear", "Rotator Cuff Repair"
+]
+
+COMORBIDITIES = [
+    ["Hypertension", "Diabetes"],
+    ["COPD", "Hypertension"],
+    ["Diabetes", "Obesity"],
+    ["Arthritis", "Hypertension"],
+    ["Sleep Apnea"],
+    ["Atrial Fibrillation"],
+    ["Chronic Pain"],
+    []
+]
+
+DISCIPLINES = ["PT", "OT", "ST"]
+
+RISK_CATEGORIES = ["Low", "Medium", "High", "Critical"]
+
+FUNCTIONAL_SCORE_TYPES = ["FIM", "Berg Balance", "Gait Speed", "Grip Strength", "ROM"]
+
+NOTIFICATION_TYPES = [
+    "SESSION_ASSIGNED", "SESSION_CANCELED", "SESSION_COMPLETED",
+    "SESSION_RESCHEDULED", "ALERT_TRIGGERED", "GOAL_UPDATED"
+]
+
+PREDICTIVE_ALERT_TYPES = [
+    "READMISSION_RISK", "DISCHARGE_DELAY", "THERAPY_INTENSITY_DECREASE",
+    "COMPLIANCE_RISK", "FUNCTIONAL_PLATEAU"
+]
+
+ALERT_SEVERITIES = ["LOW", "MEDIUM", "HIGH", "CRITICAL"]
+
+MRN_PREFIX = "MRN"
+
+
+def get_random_name():
+    """Generate a random name."""
+    if USE_FAKER:
+        return faker.first_name(), faker.last_name()
+    return choice(FIRST_NAMES), choice(LAST_NAMES)
+
+
+def generate_mrn():
+    """Generate a unique MRN."""
+    return f"{MRN_PREFIX}{randint(100000, 999999)}"
+
+
+def clear_table(db, model):
+    """Safely clear a table before seeding."""
+    try:
+        db.query(model).delete()
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"Warning: Could not clear {model.__tablename__}: {e}")
+
+
+def seed_patients(db, count=25):
+    """Seed realistic patient data."""
+    print("Seeding patients...", end=" ")
+    clear_table(db, Patient)
+    patients = []
+    for i in range(count):
+        first_name, last_name = get_random_name()
+        dob = datetime.now() - timedelta(days=randint(20*365, 85*365))  # 20-85 years old
+        admission_datetime = datetime.now() - timedelta(days=randint(1, 30))
+        discharge_datetime = None if random() > 0.3 else admission_datetime + timedelta(days=randint(5, 60))
+        
+        patient = Patient(
+            patient_id=f"PAT{str(uuid.uuid4())[:8].upper()}",
+            mrn=generate_mrn(),
+            first_name=first_name,
+            last_name=last_name,
+            dob=dob.date(),
+            admission_datetime=admission_datetime,
+            discharge_datetime=discharge_datetime,
+            primary_diagnosis=choice(DIAGNOSES),
+            comorbidities=choice(COMORBIDITIES),
+            assigned_disciplines=["PT", "OT"] if random() > 0.3 else ["PT"] if random() > 0.5 else ["OT"]
+        )
+        patients.append(patient)
+        db.add(patient)
+    
+    db.commit()
+    print(f"✓ Created {len(patients)} patients")
+    return patients
+
+
+def seed_therapists(db, count=12):
+    """Seed therapist data."""
+    print("Seeding therapists...", end=" ")
+    clear_table(db, Therapist)
+    therapists = []
+    for i in range(count):
+        first_name, last_name = get_random_name()
+        therapist = Therapist(
+            therapist_id=f"THR{str(uuid.uuid4())[:8].upper()}",
+            first_name=first_name,
+            last_name=last_name,
+            discipline=choice(DISCIPLINES),
+            active=True if random() > 0.1 else False
+        )
+        therapists.append(therapist)
+        db.add(therapist)
+    
+    db.commit()
+    print(f"✓ Created {len(therapists)} therapists")
+    return therapists
+
+
+def seed_availability(db, therapists):
+    """Seed weekly therapist availability."""
+    print("Seeding therapist availability...", end=" ")
+    clear_table(db, TherapistAvailability)
+    availability_entries = []
+    
+    # Create Mon-Fri 8am-4pm availability for each therapist
+    for therapist in therapists:
+        for day_of_week in range(5):  # Mon-Fri (0-4)
+            availability = TherapistAvailability(
+                id=str(uuid.uuid4()),
+                therapist_id=therapist.therapist_id,
+                day_of_week=day_of_week,
+                start_time=time(8, 0),
+                end_time=time(16, 0),
+                max_sessions=randint(4, 8),
+                max_minutes=randint(240, 480)
+            )
+            availability_entries.append(availability)
+            db.add(availability)
+    
+    db.commit()
+    print(f"✓ Created {len(availability_entries)} availability entries")
+
+
+def seed_time_off(db, therapists):
+    """Seed therapist time off."""
+    print("Seeding therapist time off...", end=" ")
+    clear_table(db, TherapistTimeOff)
+    time_off_entries = []
+    
+    # Create a few time off entries
+    for i in range(min(5, len(therapists))):
+        therapist = choice(therapists)
+        start_dt = datetime.now() + timedelta(days=randint(10, 60))
+        end_dt = start_dt + timedelta(days=randint(1, 10))
+        
+        time_off = TherapistTimeOff(
+            id=str(uuid.uuid4()),
+            therapist_id=therapist.therapist_id,
+            start_datetime=start_dt,
+            end_datetime=end_dt,
+            reason=choice(["Vacation", "Training", "Medical Leave", "Conference"])
+        )
+        time_off_entries.append(time_off)
+        db.add(time_off)
+    
+    db.commit()
+    print(f"✓ Created {len(time_off_entries)} time off entries")
+
+
+def seed_sessions(db, patients, therapists, count=75):
+    """Seed therapy sessions."""
+    print("Seeding therapy sessions...", end=" ")
+    clear_table(db, Session)
+    sessions = []
+    
+    for i in range(count):
+        patient = choice(patients)
+        therapist = choice(therapists)
+        session_date = datetime.now().date() - timedelta(days=randint(-30, 30))
+        start_dt = datetime.combine(session_date, time(randint(8, 15), choice([0, 30])))
+        end_dt = start_dt + timedelta(minutes=randint(30, 120))
+        
+        session = Session(
+            id=str(uuid.uuid4()),
+            therapist_id=therapist.therapist_id,
+            patient_id=patient.patient_id,
+            date=session_date,
+            start_time=start_dt.time(),
+            end_time=end_dt.time(),
+            discipline=choice(DISCIPLINES),
+            notes=choice([f"Session with {therapist.first_name}", "Progress noted", "Continue current plan", ""]),
+            status=choice(["scheduled", "completed", "canceled"]),
+            completed_at=start_dt if random() > 0.3 else None,
+            canceled_at=start_dt if random() > 0.8 else None,
+            cancellation_reason=choice(["Patient unavailable", "Weather", "No reason given"]) if random() > 0.8 else None
+        )
+        sessions.append(session)
+        db.add(session)
+    
+    db.commit()
+    print(f"✓ Created {len(sessions)} sessions")
+    return sessions
+
+
+def seed_therapy_sessions(db, patients, count=50):
+    """Seed therapy session records."""
+    print("Seeding therapy session records...", end=" ")
+    clear_table(db, TherapySession)
+    therapy_sessions = []
+    
+    for i in range(count):
+        patient = choice(patients)
+        delivered_min = randint(15, 120)
+        
+        therapy_session = TherapySession(
+            session_id=f"TS{str(uuid.uuid4())[:8].upper()}",
+            patient_id=patient.patient_id,
+            discipline=choice(DISCIPLINES),
+            delivered_minutes=delivered_min,
+            scheduled_minutes=delivered_min if random() > 0.2 else randint(15, 120),
+            missed_minutes=0 if random() > 0.1 else randint(5, 60),
+            reason_code=choice(["COMPLETED", "PARTIAL", "CANCELED"]),
+            timestamp=datetime.now() - timedelta(days=randint(1, 30)),
+            source="EHR",
+            therapist_id=None
+        )
+        therapy_sessions.append(therapy_session)
+        db.add(therapy_session)
+    
+    db.commit()
+    print(f"✓ Created {len(therapy_sessions)} therapy session records")
+
+
+def seed_risk_scores(db, patients):
+    """Seed risk scores for each patient."""
+    print("Seeding risk scores...", end=" ")
+    clear_table(db, RiskScore)
+    risk_scores = []
+    
+    for patient in patients:
+        score = randint(10, 95)
+        risk_score = RiskScore(
+            risk_id=f"RSK{str(uuid.uuid4())[:8].upper()}",
+            patient_id=patient.patient_id,
+            score=score,
+            risk_category=RISK_CATEGORIES[min(3, score // 25)],
+            top_drivers=["Age", "Comorbidities", "Functional Status"]
+        )
+        risk_scores.append(risk_score)
+        db.add(risk_score)
+    
+    db.commit()
+    print(f"✓ Created {len(risk_scores)} risk scores")
+
+
+def seed_functional_scores(db, patients, count=None):
+    """Seed functional scores for patients."""
+    print("Seeding functional scores...", end=" ")
+    clear_table(db, FunctionalScore)
+    functional_scores = []
+    
+    if count is None:
+        count = len(patients) * 3
+    
+    for i in range(count):
+        patient = choice(patients)
+        functional_score = FunctionalScore(
+            score_id=f"FS{str(uuid.uuid4())[:8].upper()}",
+            patient_id=patient.patient_id,
+            discipline=choice(DISCIPLINES),
+            score_type=choice(FUNCTIONAL_SCORE_TYPES),
+            score_value=randint(0, 10),
+            timestamp=datetime.now() - timedelta(days=randint(1, 30)),
+            notes=choice(["Improving", "Stable", "Needs attention", ""]),
+            source="Assessment"
+        )
+        functional_scores.append(functional_score)
+        db.add(functional_score)
+    
+    db.commit()
+    print(f"✓ Created {len(functional_scores)} functional scores")
+
+
+def seed_notifications(db, sessions, therapists, count=20):
+    """Seed notifications."""
+    print("Seeding notifications...", end=" ")
+    clear_table(db, Notification)
+    notifications = []
+    
+    session_list = list(db.query(Session).limit(min(count, 50)).all()) if not sessions else sessions[:min(count, 50)]
+    
+    for i in range(min(count, len(session_list))):
+        session = session_list[i] if session_list else choice(sessions) if sessions else None
+        if not session:
+            continue
+            
+        notification = Notification(
+            user_id=choice(therapists).therapist_id if therapists else f"THR{str(uuid.uuid4())[:8]}",
+            session_id=session.id,
+            type=choice(NOTIFICATION_TYPES),
+            message=f"Session update: {choice(['assigned', 'canceled', 'completed', 'rescheduled'])}",
+            created_at=datetime.now() - timedelta(hours=randint(1, 168)),
+            read=True if random() > 0.3 else False
+        )
+        notifications.append(notification)
+        db.add(notification)
+    
+    db.commit()
+    print(f"✓ Created {len(notifications)} notifications")
+
+
+def seed_predictive_alerts(db, patients, count=8):
+    """Seed predictive alerts."""
+    print("Seeding predictive alerts...", end=" ")
+    clear_table(db, PredictiveAlert)
+    alerts = []
+    
+    for i in range(count):
+        alert = PredictiveAlert(
+            type=choice(PREDICTIVE_ALERT_TYPES),
+            severity=choice(ALERT_SEVERITIES),
+            message=f"Alert: Patient may be at risk for {choice(['readmission', 'discharge delay', 'decreased compliance'])}",
+            effective_date=datetime.now().date() - timedelta(days=randint(-10, 10)),
+            created_at=datetime.now() - timedelta(days=randint(1, 30)),
+            resolved=True if random() > 0.4 else False,
+            metadata_json={"patient_id": choice(patients).patient_id if patients else None, "confidence": round(random(), 2)}
+        )
+        alerts.append(alert)
+        db.add(alert)
+    
+    db.commit()
+    print(f"✓ Created {len(alerts)} predictive alerts")
+
+
+def seed_idt_meetings(db, patients, count=4):
+    """Seed IDT meetings."""
+    print("Seeding IDT meetings...", end=" ")
+    clear_table(db, IDTMeeting)
+    meetings = []
+    
+    for i in range(min(count, len(patients))):
+        patient = patients[i] if patients else choice(patients) if patients else None
+        if not patient:
+            continue
+            
+        meeting = IDTMeeting(
+            idt_id=f"IDT{str(uuid.uuid4())[:8].upper()}",
+            patient_id=patient.patient_id,
+            meeting_datetime=datetime.now() - timedelta(days=randint(1, 14)),
+            physician_present=random() > 0.2,
+            rn_present=True,
+            pt_present=random() > 0.3,
+            ot_present=random() > 0.3,
+            slp_present=random() > 0.6,
+            goals_updated=random() > 0.4,
+            barriers=choice(["Financial constraints", "Transportation issues", "Compliance concerns", ""]),
+            physician_signoff=datetime.now() - timedelta(days=randint(1, 10)) if random() > 0.4 else None
+        )
+        meetings.append(meeting)
+        db.add(meeting)
+    
+    db.commit()
+    print(f"✓ Created {len(meetings)} IDT meetings")
+
+
+def seed_medical_necessity(db, patients, count=None):
+    """Seed medical necessity records."""
+    print("Seeding medical necessity records...", end=" ")
+    clear_table(db, MedicalNecessityRecord)
+    records = []
+    
+    if count is None:
+        count = len(patients) // 2
+    
+    for i in range(count):
+        patient = choice(patients) if patients else None
+        if not patient:
+            continue
+            
+        record = MedicalNecessityRecord(
+            record_id=f"MN{str(uuid.uuid4())[:8].upper()}",
+            patient_id=patient.patient_id,
+            statement=choice([
+                "Patient requires skilled therapy to improve functional mobility",
+                "Therapy needed to prevent complications and maintain function",
+                "Skilled intervention necessary to address safety concerns",
+                "Medical complexity requires professional oversight"
+            ]),
+            barriers=choice(["Pain", "Fatigue", "Cognitive limitations", ""]),
+            clinical_reasoning=choice([
+                "Patient demonstrates potential for functional improvement",
+                "High risk of deconditioning without therapy",
+                "Specialized techniques required for condition"
+            ]),
+            timestamp=datetime.now() - timedelta(days=randint(1, 30)),
+            discipline=choice(DISCIPLINES)
+        )
+        records.append(record)
+        db.add(record)
+    
+    db.commit()
+    print(f"✓ Created {len(records)} medical necessity records")
+
+
+def seed_override_logs(db, sessions, therapists, count=5):
+    """Seed override logs."""
+    print("Seeding override logs...", end=" ")
+    clear_table(db, OverrideLog)
+    logs = []
+    
+    session_list = list(db.query(Session).limit(min(count * 2, 50)).all()) if not sessions else sessions[:min(count * 2, 50)]
+    
+    for i in range(min(count, len(session_list))):
+        session = session_list[i] if session_list else None
+        if not session:
+            continue
+            
+        log = OverrideLog(
+            session_id=session.id,
+            recommended_therapist_id=choice(therapists).therapist_id if therapists else f"THR{str(uuid.uuid4())[:8]}",
+            chosen_therapist_id=session.therapist_id or choice(therapists).therapist_id if therapists else f"THR{str(uuid.uuid4())[:8]}",
+            recommended_score=round(random() * 100, 2),
+            chosen_score=round(random() * 100, 2),
+            confidence_score=round(random(), 2),
+            risk_summary={"readmission_risk": 0.35, "functional_decline_risk": 0.22},
+            data_gaps=["Recent imaging results", "Family support status"],
+            override_reason=choice([
+                "Therapist availability",
+                "Patient preference",
+                "Geographic proximity",
+                "Specialized skills needed"
+            ]),
+            overridden_by="scheduler@rehab.local",
+            timestamp=datetime.now() - timedelta(hours=randint(1, 168))
+        )
+        logs.append(log)
+        db.add(log)
+    
+    db.commit()
+    print(f"✓ Created {len(logs)} override logs")
+
+
+def seed_session_audit_logs(db, sessions, count=None):
+    """Seed session audit logs."""
+    print("Seeding session audit logs...", end=" ")
+    clear_table(db, SessionAuditLog)
+    audit_logs = []
+    
+    session_list = list(db.query(Session).all()) if not sessions else sessions
+    if count is None:
+        count = len(session_list)
+    
+    for i in range(min(count, len(session_list))):
+        session = session_list[i] if session_list else None
+        if not session:
+            continue
+            
+        audit_log = SessionAuditLog(
+            session_id=session.id,
+            action_type=choice(["CREATED", "UPDATED", "COMPLETED", "CANCELED"]),
+            performed_by="system@rehab.local",
+            timestamp=datetime.now() - timedelta(hours=randint(1, 336)),
+            old_values={"status": "scheduled"},
+            new_values={"status": session.status},
+            notes=choice(["Routine update", "Manual override", "System adjustment", ""])
+        )
+        audit_logs.append(audit_log)
+        db.add(audit_log)
+    
+    db.commit()
+    print(f"✓ Created {len(audit_logs)} session audit logs")
+
+
+def main():
+    """Main seeding orchestration."""
+    print("\n" + "="*80)
+    print("RehabConnect Demo Data Seeding System")
+    print("="*80 + "\n")
+    
+    db = SessionLocal()
+    try:
+        # Seed in dependency order
+        patients = seed_patients(db, count=25)
+        therapists = seed_therapists(db, count=12)
+        seed_availability(db, therapists)
+        seed_time_off(db, therapists)
+        sessions = seed_sessions(db, patients, therapists, count=75)
+        seed_therapy_sessions(db, patients, count=50)
+        seed_risk_scores(db, patients)
+        seed_functional_scores(db, patients, count=70)
+        seed_notifications(db, sessions, therapists, count=20)
+        seed_predictive_alerts(db, patients, count=8)
+        seed_idt_meetings(db, patients, count=4)
+        seed_medical_necessity(db, patients, count=12)
+        seed_override_logs(db, sessions, therapists, count=5)
+        seed_session_audit_logs(db, sessions, count=50)
+        
+        print("\n" + "="*80)
+        print("✓ Demo data seeded successfully!")
+        print("="*80 + "\n")
+        
+    except Exception as e:
+        db.rollback()
+        print(f"\n✗ Error during seeding: {e}")
+        import traceback
+        traceback.print_exc()
+    finally:
+        db.close()
+
+
+if __name__ == "__main__":
+    main()
 from datetime import datetime, timedelta, time, timezone
 
 from sqlalchemy import inspect, text
