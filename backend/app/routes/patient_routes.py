@@ -1,8 +1,11 @@
+import logging
+
 from flask import Blueprint, request, jsonify
 from ..services.patient_service import PatientService
 from ..database import SessionLocal
 
 patient_bp = Blueprint('patient', __name__)
+logger = logging.getLogger(__name__)
 
 @patient_bp.route('/patients', methods=['POST'])
 def create_patient():
@@ -92,5 +95,8 @@ def list_patients():
             'admission_datetime': p.admission_datetime.isoformat(),
             'discharge_datetime': p.discharge_datetime.isoformat() if p.discharge_datetime else None
         } for p in patients])
+    except Exception as e:
+        logger.exception("Failed to list patients")
+        return jsonify({'error': str(e)}), 500
     finally:
         db.close()
