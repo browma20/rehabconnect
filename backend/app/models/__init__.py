@@ -1,4 +1,4 @@
-from .base import Base  # if you have a base.py, otherwise remove this
+from app.database import Base
 from .audit_log import AuditLog
 from .automation_audit_entry import AutomationAuditEntry
 from .functional_score import FunctionalScore
