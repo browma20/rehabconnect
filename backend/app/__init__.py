@@ -54,24 +54,6 @@ def create_app():
     if not app.config["SQLALCHEMY_DATABASE_URI"]:
         raise RuntimeError("DATABASE_URL is not set")
 
-    # Import models inside the factory
-    from .models.audit_log import AuditLog
-    from .models.automation_audit_entry import AutomationAuditEntry
-    from .models.functional_score import FunctionalScore
-    from .models.idt_meeting import IDTMeeting
-    from .models.medical_necessity_record import MedicalNecessityRecord
-    from .models.notification import Notification
-    from .models.patient import Patient
-    from .models.physician_evaluation import PhysicianEvaluation
-    from .models.predictive_alert import PredictiveAlert
-    from .models.risk_score import RiskScore
-    from .models.override_log import OverrideLog
-    from .models.session import Session
-    from .models.session_audit_log import SessionAuditLog
-    from .models.therapy_session import TherapySession
-    from .models.therapist_availability import TherapistAvailability, TherapistTimeOff
-    from .models.user import User
-
     # Optional table creation
     if os.getenv("AUTO_CREATE_TABLES", "false").lower() == "true":
         Base.metadata.create_all(bind=engine)
@@ -99,16 +81,5 @@ def create_app():
     app.register_blueprint(therapist_mobile_bp)
     app.register_blueprint(availability_bp)
     app.register_blueprint(staffing_bp)
-
-@app.route("/debug/flask")
-def debug_flask():
-    try:
-        from sqlalchemy import text
-        from .database import engine
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT 1"))
-            return {"connected": True, "result": [row for row in result]}
-    except Exception as e:
-        return {"connected": False, "error": str(e)}
 
     return app
