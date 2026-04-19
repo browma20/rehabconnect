@@ -54,6 +54,17 @@ def create_app():
     if not app.config["SQLALCHEMY_DATABASE_URI"]:
         raise RuntimeError("DATABASE_URL is not set")
 
+    @app.route("/debug/flask")
+    def debug_flask():
+        try:
+            from sqlalchemy import text
+
+            with engine.connect() as conn:
+                result = conn.execute(text("SELECT 1"))
+                return {"connected": True, "result": [list(row) for row in result]}
+        except Exception as e:
+            return {"connected": False, "error": str(e)}
+
     # Optional table creation
     if os.getenv("AUTO_CREATE_TABLES", "false").lower() == "true":
         Base.metadata.create_all(bind=engine)
