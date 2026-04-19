@@ -48,6 +48,10 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
 
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+    if not app.config["SQLALCHEMY_DATABASE_URI"]:
+        raise RuntimeError("DATABASE_URL is not set")
+
     # Import models inside the factory to ensure they load before table creation
     from .models.audit_log import AuditLog
     from .models.automation_audit_entry import AutomationAuditEntry

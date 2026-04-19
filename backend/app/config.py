@@ -9,8 +9,10 @@ def _normalize_database_url(url: str) -> str:
     return url
 
 
-DATABASE_URL = _normalize_database_url(
-    os.getenv("DATABASE_URL", "postgresql+psycopg://postgres:ConnectR9_4@localhost:5432/rehabconnect")
-)
+_raw_database_url = os.getenv("DATABASE_URL")
+if not _raw_database_url:
+    raise RuntimeError("DATABASE_URL is not set")
+
+DATABASE_URL = _normalize_database_url(_raw_database_url)
 SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key-here")
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
