@@ -1,6 +1,6 @@
 ﻿from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from . import Base
+from app.database import Base
 
 class FunctionalScore(Base):
     __tablename__ = 'functional_scores'

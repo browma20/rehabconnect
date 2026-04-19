@@ -1,7 +1,7 @@
 ﻿from sqlalchemy import Column, String, Integer, DateTime, JSON, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from . import Base
+from app.database import Base
 
 class RiskScore(Base):
     __tablename__ = 'risk_scores'

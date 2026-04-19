@@ -12,6 +12,7 @@ from .risk_score import RiskScore
 from .override_log import OverrideLog
 from .session import Session
 from .session_audit_log import SessionAuditLog
+from .therapist import Therapist
 from .therapy_session import TherapySession
 from .therapist_availability import TherapistAvailability, TherapistTimeOff
 from .user import User
@@ -31,6 +32,7 @@ __all__ = [
     "OverrideLog",
     "Session",
     "SessionAuditLog",
+    "Therapist",
     "TherapySession",
     "TherapistAvailability",
     "TherapistTimeOff",

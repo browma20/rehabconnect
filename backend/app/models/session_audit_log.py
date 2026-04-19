@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, JSON
 from datetime import datetime
-from . import Base
+from app.database import Base
 
 
 class SessionAuditLog(Base):

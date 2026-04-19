@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, Float, Integer, JSON, String, Text
 
-from . import Base
+from app.database import Base
 
 
 class OverrideLog(Base):

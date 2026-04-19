@@ -3,25 +3,8 @@ import os
 from flask import Flask
 from flask_cors import CORS
 
-from .database import SessionLocal, engine
-from .models import Base
-from .models.audit_log import AuditLog
-from .models.automation_audit_entry import AutomationAuditEntry
-from .models.functional_score import FunctionalScore
-from .models.idt_meeting import IDTMeeting
-from .models.medical_necessity_record import MedicalNecessityRecord
-from .models.notification import Notification
-from .models.patient import Patient
-from .models.physician_evaluation import PhysicianEvaluation
-from .models.predictive_alert import PredictiveAlert
-from .models.risk_score import RiskScore
-from .models.override_log import OverrideLog
-from .models.session import Session
-from .models.session_audit_log import SessionAuditLog
-from .models.therapist import Therapist
-from .models.therapy_session import TherapySession
-from .models.therapist_availability import TherapistAvailability, TherapistTimeOff
-from .models.user import User
+from .database import SessionLocal, engine, Base
+from . import models  # Ensure all models are loaded for create_all()
 
 from .routes.patient_routes import patient_bp
 from .routes.therapy_minutes_routes import therapy_bp
@@ -72,7 +55,7 @@ def create_app():
         finally:
             db.close()
 
-    # Optional table creation
+    # Optional table creation - all models are loaded via models/__init__.py
     if os.getenv("AUTO_CREATE_TABLES", "false").lower() == "true":
         Base.metadata.create_all(bind=engine)
 

@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 from sqlalchemy import Column, String, Integer, Time, DateTime, ForeignKey
-from . import Base
+from app.database import Base
 
 
 class TherapistAvailability(Base):

@@ -1,6 +1,6 @@
 ﻿from sqlalchemy import Column, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from . import Base
+from app.database import Base
 
 class IDTMeeting(Base):
     __tablename__ = 'idt_meetings'

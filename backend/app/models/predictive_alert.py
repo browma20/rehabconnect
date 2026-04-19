@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Boolean, Column, Date, DateTime, Integer, JSON, String
 
-from . import Base
+from app.database import Base
 
 
 class PredictiveAlert(Base):

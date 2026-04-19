@@ -1,7 +1,7 @@
 ﻿from sqlalchemy import Column, String, Date, DateTime, JSON
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from . import Base
+from app.database import Base
 
 class Patient(Base):
     __tablename__ = 'patients'
