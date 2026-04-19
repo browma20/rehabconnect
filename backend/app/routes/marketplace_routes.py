@@ -15,10 +15,10 @@ def list_marketplace():
     """Get list of all pending session requests."""
     db = SessionLocal()
     try:
-        # Query all pending sessions
+        # Query all pending sessions (unassigned: no therapist_id)
         pending_sessions = db.query(SessionModel).filter(
             SessionModel.status == "scheduled",
-            SessionModel.therapist_id.isnull()
+            SessionModel.therapist_id.is_(None)
         ).all()
         
         result = [
