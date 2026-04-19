@@ -1,8 +1,34 @@
 from flask import Blueprint, request, jsonify
 from ..services.functional_service import FunctionalService
 from ..database import SessionLocal
+from ..models import FunctionalScore
 
 functional_bp = Blueprint('functional', __name__)
+
+@functional_bp.route('/', methods=['GET'])
+def list_functional_scores():
+    """Get list of all functional scores."""
+    db = SessionLocal()
+    try:
+        scores = db.query(FunctionalScore).all()
+        result = [
+            {
+                "score_id": s.score_id,
+                "patient_id": s.patient_id,
+                "discipline": s.discipline,
+                "score_type": s.score_type,
+                "score_value": s.score_value,
+                "timestamp": s.timestamp.isoformat() if s.timestamp else None,
+                "notes": s.notes,
+                "source": s.source
+            }
+            for s in scores
+        ]
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()
 
 @functional_bp.route('/patients/<patient_id>/functional-scores', methods=['POST'])
 def add_functional_score(patient_id):

@@ -1,15 +1,50 @@
 from flask import Blueprint, request, jsonify
 
 from app.database import SessionLocal
+from app.models import Session as SessionModel
 from app.services.marketplace_service import MarketplaceService, AUTO_ASSIGN_THRESHOLD
 
 marketplace_bp = Blueprint("marketplace", __name__)
 
 
 # ---------------------------------------------------------------------------
+# GET /api/marketplace - List all marketplace items (pending session requests)
+# ---------------------------------------------------------------------------
+@marketplace_bp.route("/", methods=["GET"])
+def list_marketplace():
+    """Get list of all pending session requests."""
+    db = SessionLocal()
+    try:
+        # Query all pending sessions
+        pending_sessions = db.query(SessionModel).filter(
+            SessionModel.status == "scheduled",
+            SessionModel.therapist_id.isnull()
+        ).all()
+        
+        result = [
+            {
+                "id": s.id,
+                "patient_id": s.patient_id,
+                "date": s.date.isoformat() if s.date else None,
+                "start_time": str(s.start_time) if s.start_time else None,
+                "end_time": str(s.end_time) if s.end_time else None,
+                "discipline": s.discipline,
+                "status": s.status,
+                "notes": s.notes
+            }
+            for s in pending_sessions
+        ]
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()
+
+
+# ---------------------------------------------------------------------------
 # POST /api/marketplace/request-session
 # ---------------------------------------------------------------------------
-@marketplace_bp.route("/marketplace/request-session", methods=["POST"])
+@marketplace_bp.route("/request-session", methods=["POST"])
 def request_session():
     """
     Create a pending (unassigned) session request.
@@ -63,7 +98,7 @@ def request_session():
 # ---------------------------------------------------------------------------
 # POST /api/marketplace/assign
 # ---------------------------------------------------------------------------
-@marketplace_bp.route("/marketplace/assign", methods=["POST"])
+@marketplace_bp.route("/assign", methods=["POST"])
 def auto_assign():
     """
     Attempt to auto-assign the best-scoring therapist to a session.
@@ -108,7 +143,7 @@ def auto_assign():
 # ---------------------------------------------------------------------------
 # GET /api/marketplace/recommendations
 # ---------------------------------------------------------------------------
-@marketplace_bp.route("/marketplace/recommendations", methods=["GET"])
+@marketplace_bp.route("/recommendations", methods=["GET"])
 def get_recommendations():
     """
     Return the scored and ranked therapist list for a session.
@@ -137,7 +172,7 @@ def get_recommendations():
 # ---------------------------------------------------------------------------
 # POST /api/marketplace/confirm-assignment
 # ---------------------------------------------------------------------------
-@marketplace_bp.route("/marketplace/confirm-assignment", methods=["POST"])
+@marketplace_bp.route("/confirm-assignment", methods=["POST"])
 def confirm_assignment():
     """
     Scheduler manually confirms a therapist assignment from the ranked list.

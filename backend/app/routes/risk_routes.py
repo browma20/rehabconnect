@@ -1,8 +1,32 @@
 from flask import Blueprint, request, jsonify
 from ..services.risk_service import RiskService
 from ..database import SessionLocal
+from ..models import RiskScore
 
 risk_bp = Blueprint('risk', __name__)
+
+@risk_bp.route('/', methods=['GET'])
+def list_risk_scores():
+    """Get list of all risk scores."""
+    db = SessionLocal()
+    try:
+        risk_scores = db.query(RiskScore).all()
+        result = [
+            {
+                "risk_id": rs.risk_id,
+                "patient_id": rs.patient_id,
+                "score": rs.score,
+                "risk_category": rs.risk_category,
+                "top_drivers": rs.top_drivers,
+                "last_updated": rs.last_updated.isoformat() if rs.last_updated else None
+            }
+            for rs in risk_scores
+        ]
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        db.close()
 
 @risk_bp.route('/patients/<patient_id>/risk', methods=['GET'])
 def get_patient_risk(patient_id):
