@@ -9,6 +9,11 @@ app = FastAPI(title="RehabConnect API")
 # Mount Flask under /api
 app.mount("/api", WSGIMiddleware(flask_app))
 
+@app.get("/debug/env")
+def debug_env():
+    import os
+    return {"DATABASE_URL": os.getenv("DATABASE_URL")}
+
 @app.get("/")
 def home():
     return {
