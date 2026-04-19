@@ -18,6 +18,7 @@ from .models.risk_score import RiskScore
 from .models.override_log import OverrideLog
 from .models.session import Session
 from .models.session_audit_log import SessionAuditLog
+from .models.therapist import Therapist
 from .models.therapy_session import TherapySession
 from .models.therapist_availability import TherapistAvailability, TherapistTimeOff
 from .models.user import User
