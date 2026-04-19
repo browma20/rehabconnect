@@ -21,3 +21,6 @@ def home():
         "docs": "/docs",
         "api_base": "/api"
     }
+@app.get("/debug/source")
+def debug_source():
+    return {"file": __file__}
